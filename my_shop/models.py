@@ -43,8 +43,11 @@ class Order(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField()
     quantity = models.PositiveIntegerField(default=1)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='orders')
     created_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='orders')
+
+    def __str__(self):
+        return self.name
 
 
 class Comment(models.Model):
@@ -52,5 +55,8 @@ class Comment(models.Model):
     email = models.EmailField()
     body = models.TextField()
     is_possible = models.BooleanField(default=False)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='comments')
+
+    def __str__(self):
+        return self.name
