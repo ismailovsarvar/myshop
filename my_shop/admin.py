@@ -6,8 +6,8 @@ from my_shop.models import *
 # Register your models here.
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('title', 'id')
-    search_fields = ('title',)
+    list_display = ('title', 'slug')
+    fields = ('title',)
 
 
 @admin.register(Product)
