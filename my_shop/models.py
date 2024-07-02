@@ -1,10 +1,18 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 # Create your models here.
 
 class Category(models.Model):
     title = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+
+        super(Category, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -26,14 +34,21 @@ class Product(models.Model):
     rating = models.IntegerField(choices=RatingChoices.choices, default=RatingChoices.zero.value)
     quantity = models.PositiveIntegerField(default=1)
     image = models.ImageField(upload_to='images/')
+    slug = models.SlugField(unique=True, blank=True)
+    on_sale = models.BooleanField(default=False)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')
 
     @property
     def discounted_price(self):
         if self.discount > 0:
-            return self.price * (1 - self.discount / 100)
+            return round(self.price * (1 - self.discount / 100), 2)
         else:
             return self.price
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
